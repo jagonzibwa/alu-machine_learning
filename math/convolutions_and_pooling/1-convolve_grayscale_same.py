@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Function that performs a valid convolution
-on grayscale images with custom padding"""
+"""Function that performs a valid convolution on grayscale images"""
 
 import numpy as np
 
 
-def convolve_grayscale_padding(images, kernel, padding):
-    """Performs a convolution on grayscale images custom padding
+def convolve_grayscale_same(images, kernel):
+    """Performs a valid convolution on grayscale images
     Args:
         images: `numpy.ndarray` with shape (m, h, w)
             containing multiple grayscale images
@@ -17,23 +16,19 @@ def convolve_grayscale_padding(images, kernel, padding):
             containing the kernel for the convolution
             kh: `int`, is the height of the kernel
             kw: `int`, is the width of the kernel
-        padding: `tuple` of (ph, pw)
-            ph: `int` is the padding for the height of the image
-            pw: `int` is the padding for the width of the image
     Returns:
-        output: `numpy.ndarray` containing the convolved images
+         output: `numpy.ndarray` containing the convolved images
     """
     m, h, w = images.shape[0], images.shape[1], images.shape[2]
     kh, kw = kernel.shape[0], kernel.shape[1]
-    ph, pw = padding[0], padding[1]
-    nw = int(w - kw + (2 * pw) + 1)
-    nh = int(h - kh + (2 * ph) + 1)
-    convolved = np.zeros((m, nh, nw))
+    pw = int(kw / 2)
+    ph = int(kh / 2)
+    convolved = np.zeros((m, h, w))
     npad = ((0, 0), (ph, ph), (pw, pw))
     imagesp = np.pad(images, pad_width=npad,
                      mode='constant', constant_values=0)
-    for i in range(nh):
-        for j in range(nw):
+    for i in range(h):
+        for j in range(w):
             image = imagesp[:, i:i + kh, j:j + kw]
             convolved[:, i, j] = np.sum(np.multiply(image, kernel),
                                         axis=(1, 2))
