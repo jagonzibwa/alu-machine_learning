@@ -30,4 +30,3 @@ def convolve_grayscale_valid(images, kernel):
             convolved[:, i, j] = np.sum(np.multiply(image, kernel),
                                         axis=(1, 2))
     return convolved
-    
